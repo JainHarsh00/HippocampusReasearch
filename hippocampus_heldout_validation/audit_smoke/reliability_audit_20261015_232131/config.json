@@ -1,0 +1,182 @@
+{
+  "created_utc": "2026-10-15T17:51:31.411265+00:00",
+  "run_id": "reliability_audit_20261015_232131",
+  "cli_args": {
+    "seeds": 1,
+    "episodes": 10,
+    "max_steps": 150,
+    "planning_steps": 5,
+    "eval_episodes": 2,
+    "output": "audit_smoke",
+    "bias_levels": "0,0.3"
+  },
+  "config": {
+    "episodes": 10,
+    "max_steps_per_episode": 150,
+    "evaluation_episodes": 2,
+    "alpha": 0.1,
+    "gamma": 0.95,
+    "epsilon_fixed": 0.2,
+    "epsilon_min": 0.05,
+    "epsilon_max": 0.8,
+    "lambda_dispersion": 5.0,
+    "planning_steps": 5,
+    "step_penalty": -0.01,
+    "goal_reward": 1.0,
+    "adaptive_epsilon_formula": "eps_min + (eps_max-eps_min)*exp(-lambda_dispersion*(max_a Q(s,a)-min_a Q(s,a)))",
+    "model_bias_scope": "planning predictions only; real updates use observed transitions",
+    "reliability_method": "empirical modal prediction from learned outcomes, scored against subsequent observation; reliability weights later planning updates; no true transition function or corruption labels available to estimator",
+    "mask_design": "nested corruption masks predefined per maze and seed; labels used only by planning-model intervention",
+    "rng_design": "separate agent, training environment, evaluation environment, and greedy action streams"
+  },
+  "bias_levels": [
+    0.0,
+    0.3
+  ],
+  "algorithms": [
+    "q_learning",
+    "dyna_q_fixed",
+    "dyna_q_adaptive",
+    "dyna_q_reliability",
+    "dyna_q_no_weight",
+    "dyna_q_shuffled_reliability"
+  ],
+  "mazes": {
+    "maze_a": {
+      "rows": [
+        "S...#...",
+        ".##.#.#.",
+        "...#....",
+        ".#...##.",
+        ".###.#..",
+        "...#.#..",
+        "##...#..",
+        ".......G"
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        7,
+        7
+      ],
+      "shortest_path_length_moves": 14
+    },
+    "maze_b": {
+      "rows": [
+        "S.#.....",
+        "...#.#..",
+        ".#...#..",
+        ".###....",
+        "...##.#.",
+        "#.....#.",
+        "..#.....",
+        ".....#.G"
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        7,
+        7
+      ],
+      "shortest_path_length_moves": 14
+    },
+    "maze_c": {
+      "rows": [
+        "S....#..",
+        "##.#....",
+        "...#.#..",
+        ".#...#..",
+        ".#.#....",
+        "...##.#.",
+        ".#......",
+        "...#...G"
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        7,
+        7
+      ],
+      "shortest_path_length_moves": 14
+    },
+    "heldout_d": {
+      "rows": [
+        "S.#.....",
+        "...##.#.",
+        "#.......",
+        ".##..#..",
+        "...#....",
+        ".#...##.",
+        "...#....",
+        "......#G"
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        7,
+        7
+      ],
+      "shortest_path_length_moves": 14
+    },
+    "heldout_e": {
+      "rows": [
+        "S.......",
+        "##..#...",
+        "...#..#.",
+        ".#......",
+        "...##.#.",
+        ".#......",
+        "....#...",
+        ".......G"
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        7,
+        7
+      ],
+      "shortest_path_length_moves": 14
+    },
+    "heldout_f": {
+      "rows": [
+        "S..#....",
+        ".#......",
+        "...##.#.",
+        "#.......",
+        "...#..#.",
+        ".#......",
+        "...##...",
+        ".......G"
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        7,
+        7
+      ],
+      "shortest_path_length_moves": 14
+    }
+  },
+  "seed_values": [
+    0
+  ],
+  "planned_runs": 72,
+  "interpretation_guardrails": [
+    "Corruption labels are hidden from reliability estimator.",
+    "Reliability predictions are generated from learned outcomes before current outcome is observed.",
+    "Unseen pairs have no reliability evidence; reliability weight defaults to zero.",
+    "Three fixed mazes do not establish generality beyond these environments."
+  ]
+}

@@ -1,231 +1,34 @@
-# 🧠 Hippocampus-Inspired Reinforcement Learning Agent
+# Adaptive-epsilon diagnostic sweep
 
-A reinforcement learning project inspired by the computational role of the **hippocampus** in spatial navigation and mental simulation. The project progressively builds an intelligent agent capable of learning a grid-world environment, constructing an internal world model, performing imagination-based planning using the Dyna framework, learning value functions, and adapting its exploration strategy dynamically.
+This diagnostic compares fixed-epsilon Dyna-Q (epsilon=0.2) against adaptive-epsilon Dyna-Q over a predefined lambda grid. Curiosity is intentionally disabled to isolate the adaptive exploration mechanism.
 
----
-
-## Overview
-
-Traditional reinforcement learning agents learn only through direct interaction with the environment. Biological agents, however, can mentally simulate future experiences before acting.
-
-This project explores that idea by implementing a hippocampus-inspired architecture where the agent:
-
-- Learns a model of the environment
-- Simulates future trajectories internally
-- Updates action values from imagined experiences
-- Chooses actions using planning rather than pure trial-and-error
-- Dynamically adjusts exploration based on planning confidence
-
-The implementation is divided into multiple milestones (MVPs), with each notebook introducing one important component.
-
----
-
-## Project Structure
-
-```
-HippocampusProject/
-│
-├── maze.py                         # Maze environment
-├── MVP1_MinimalGridMaze.ipynb      # Grid world environment
-├── MVP2_AgentBody.ipynb            # Basic agent interaction
-├── MVP3_WorldModel.ipynb           # Internal world model
-├── MVP4_DynaPlanning.ipynb         # Planning with imagined rollouts
-├── MVP5_ValueFunction.ipynb        # Q-learning integration
-├── MVP6_AdaptiveEpsilon.ipynb      # Adaptive exploration strategy
-└── README.md
-```
-
----
-
-## Project Progression
-
-### MVP 1 — Minimal Grid Maze
-
-- Creates the grid-world environment
-- Defines start, goal, walls, and movement
-- Implements environment rendering and interaction
-
----
-
-### MVP 2 — Agent Body
-
-Introduces an autonomous agent capable of:
-
-- Perceiving the environment
-- Taking actions
-- Moving through the maze
-- Receiving rewards
-
----
-
-### MVP 3 — World Model
-
-The agent learns an internal representation of the environment by storing:
-
-- State transitions
-- Rewards
-- Predictive dynamics
-
-This enables the agent to reason about future states without physically visiting them.
-
----
-
-### MVP 4 — Dyna Planning
-
-Implements Sutton's **Dyna architecture**.
-
-The agent:
-
-- Imagines future trajectories
-- Simulates rollouts using its learned model
-- Updates knowledge from imagined experiences
-- Plans before acting
-
-This mimics hippocampal replay observed in biological navigation.
-
----
-
-### MVP 5 — Value Function Learning
-
-Adds Q-learning to estimate long-term action values.
-
-Features include:
-
-- Temporal Difference learning
-- Bellman updates
-- Discounted future rewards
-- Improved policy selection
-
----
-
-### MVP 6 — Adaptive Exploration
-
-Instead of using a fixed exploration rate, the agent dynamically adjusts ε (epsilon) according to planning confidence.
-
-High uncertainty:
-- More exploration
-
-High confidence:
-- More exploitation
-
-This allows the agent to efficiently balance exploration and exploitation throughout learning.
-
----
-
-## Key Concepts
-
-- Reinforcement Learning
-- Grid World Navigation
-- Q-Learning
-- Temporal Difference Learning
-- World Models
-- Model-Based Reinforcement Learning
-- Dyna Architecture
-- Mental Simulation
-- Planning
-- Adaptive Exploration
-- Computational Neuroscience
-- Hippocampus-Inspired Navigation
-
----
-
-## Requirements
-
-Install the required Python packages:
-
+## Install
 ```bash
-pip install numpy matplotlib jupyter
+pip install -r requirements.txt
 ```
 
----
-
-## Running the Project
-
-Clone the repository:
-
+## Quick smoke test
 ```bash
-git clone https://github.com/yourusername/HippocampusProject.git
+python diagnose_adaptive_epsilon.py --seeds 2 --episodes 20 --lambdas 0,1,5
 ```
 
-Open Jupyter Notebook:
-
+## Main diagnostic
 ```bash
-jupyter notebook
+python diagnose_adaptive_epsilon.py --seeds 10 --episodes 200 --planning-steps 5 --lambdas 0,0.5,1,2,5,10
 ```
 
-Run the notebooks sequentially:
+Run from this folder, which must contain both `diagnose_adaptive_epsilon.py` and `run_experiments.py`.
 
-1. MVP1_MinimalGridMaze.ipynb
-2. MVP2_AgentBody.ipynb
-3. MVP3_WorldModel.ipynb
-4. MVP4_DynaPlanning.ipynb
-5. MVP5_ValueFunction.ipynb
-6. MVP6_AdaptiveEpsilon.ipynb
+## What is controlled?
+- Same maze, learning rate, discount factor, epsilon bounds, planning budget, episode cap, and matched seed numbers.
+- Fixed baseline uses epsilon=0.2.
+- Adaptive conditions differ only in lambda.
+- Curiosity is disabled in all conditions.
 
-Each notebook builds upon the previous milestone.
+## Files saved
+Every run gets a new timestamped folder under `results/`, containing config, per-episode results, evaluation results, per-seed summaries, across-seed summary, plots, Q tables, learned models, and metadata.
 
----
+## Important
+This is diagnostic tuning, not confirmatory evaluation. Do not select lambda solely on the final evaluation set and then report that same set as unbiased test performance. After choosing a candidate using training/validation criteria, freeze it and evaluate it on held-out seeds and additional mazes.
 
-## Future Improvements
-
-Potential extensions include:
-
-- Deep Q Networks (DQN)
-- PPO implementation
-- Curiosity-driven intrinsic rewards
-- Prioritized experience replay
-- Continuous control environments
-- Partially Observable MDPs
-- Transformer-based world models
-- MuZero-style planning
-- 3D robotic navigation
-- ROS2 and Gazebo integration
-
----
-
-## Applications
-
-This framework can be extended for:
-
-- Autonomous robotics
-- Mobile robot navigation
-- Space exploration rovers
-- Drone path planning
-- Computational neuroscience research
-- Cognitive architectures
-- Model-based AI agents
-
----
-
-## Inspiration
-
-This project draws inspiration from research in:
-
-- Reinforcement Learning
-- Sutton's Dyna Architecture
-- Hippocampal Replay
-- Place Cells and Grid Cells
-- Cognitive Maps
-- Model-Based Planning
-
----
-
-## Author
-
-**Harsh Jain**
-
-B.Tech Artificial Intelligence & Machine Learning
-
-Interests:
-- Reinforcement Learning
-- Robotics
-- Computational Neuroscience
-- Autonomous Systems
-- Space Robotics
-- Artificial Intelligence
-
----
-
-## License
-
-This project is intended for educational and research purposes.
+The adaptive rule is still a heuristic based on action-value dispersion; the experiment tests its behavior, not whether dispersion is a calibrated epistemic uncertainty estimate.

@@ -1,0 +1,27 @@
+{
+  "maze": "large_12x12_short",
+  "seed": 0,
+  "slip_probability": 0.25,
+  "bias_fraction": 0.0,
+  "algorithm": "uct_mcts_q_bootstrap",
+  "config": {
+    "episodes": 200,
+    "max_steps_per_episode": 250,
+    "evaluation_episodes": 10,
+    "alpha": 0.1,
+    "gamma": 0.95,
+    "step_penalty": -0.01,
+    "goal_reward": 1.0,
+    "mcts_simulations": 32,
+    "search_depth": 48,
+    "uct_exploration": 1.414,
+    "search_horizon_note": "Default search depth 48 exceeds the longest shortest path (40 moves) in the included mazes; this removes the previous 12-step horizon limitation."
+  },
+  "python_version": "3.13.5",
+  "numpy_version": "2.1.3",
+  "source_sha256": "6cf6b884b86e758f030126c5954e6d74c22d5f88b002837ab67a7542d88309f0",
+  "helper_source_sha256": "fe79af6e9ff5e0e8ab19e57c646afaa8b6049954532f997e71c640718daefb0c",
+  "method": "UCT tree search over online empirical transition model; selected action maximizes root visits with mean-return tie-break; tabular Q-learning used for real transitions and as leaf bootstrap",
+  "search_budget": "fixed simulations per real decision and a fixed depth cap; model-query budget is higher than five one-step Dyna updates and must be reported explicitly",
+  "corruption_scope": "selected planning state-action distributions replaced by nonlocal non-goal distractor; environment observations and real updates unchanged"
+}

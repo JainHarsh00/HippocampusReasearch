@@ -1,0 +1,52 @@
+{
+  "planned_runs": 200,
+  "created_utc": "2026-10-18T07:00:00.030452+00:00",
+  "algorithms": [
+    "q_learning",
+    "count_bonus_q",
+    "rnd_q",
+    "icm_q",
+    "ngu_style_q"
+  ],
+  "slip_levels": [
+    0.1,
+    0.25
+  ],
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "config": {
+    "episodes": 200,
+    "max_steps_per_episode": 250,
+    "evaluation_episodes": 10,
+    "alpha": 0.1,
+    "gamma": 0.95,
+    "epsilon_fixed": 0.2,
+    "epsilon_min": 0.05,
+    "epsilon_max": 0.8,
+    "lambda_dispersion": 5.0,
+    "intrinsic_scale": 0.05,
+    "curiosity_train_every": 4,
+    "reward": "real reward remains +1 at goal and -0.01 otherwise; intrinsic reward only added to learning target; evaluation reports extrinsic return"
+  },
+  "python_version": "3.13.5",
+  "numpy_version": "2.1.3",
+  "torch_version": "2.11.0+cu128",
+  "source_sha256": "212fc3374a0859aa32d00175c3fe6af3fb18283913129f5d8ecaf4a6a128dedc",
+  "helper_source_sha256": "fe79af6e9ff5e0e8ab19e57c646afaa8b6049954532f997e71c640718daefb0c",
+  "environment_scope": "two fixed grid layouts under stochastic action-slip dynamics; model-bias corruption is not applicable to these model-free exploration baselines",
+  "notes": [
+    "RND, ICM, and NGU are implemented as discrete-state adaptations; the original methods target high-dimensional/deep-RL settings.",
+    "NGU-style variant omits original UVFA policy family and distributed recurrent training.",
+    "This suite measures exploration under stochastic navigation separately from the model-corruption robustness experiment."
+  ]
+}

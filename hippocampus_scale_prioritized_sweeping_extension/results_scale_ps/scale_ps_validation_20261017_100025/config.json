@@ -1,0 +1,181 @@
+{
+  "created_utc": "2026-10-17T04:30:25.507332+00:00",
+  "run_id": "scale_ps_validation_20261017_100025",
+  "cli_args": {
+    "seeds": 10,
+    "episodes": 200,
+    "max_steps": 250,
+    "planning_steps": 5,
+    "eval_episodes": 10,
+    "output": "results_scale_ps",
+    "bias_levels": "0,0.10,0.30",
+    "priority_threshold": 0.0001,
+    "bootstrap_resamples": 30000,
+    "bootstrap_seed": 20261017
+  },
+  "config": {
+    "episodes": 200,
+    "max_steps_per_episode": 250,
+    "evaluation_episodes": 10,
+    "alpha": 0.1,
+    "gamma": 0.95,
+    "epsilon_fixed": 0.2,
+    "epsilon_min": 0.05,
+    "epsilon_max": 0.8,
+    "lambda_dispersion": 5.0,
+    "planning_steps": 5,
+    "priority_threshold": 0.0001,
+    "step_penalty": -0.01,
+    "goal_reward": 1.0,
+    "adaptive_epsilon_formula": "eps_min + (eps_max-eps_min)*exp(-lambda_dispersion*(max_a Q(s,a)-min_a Q(s,a)))",
+    "model_bias_scope": "planning predictions only; real updates use observed transitions",
+    "reliability_method": "empirical modal prediction from learned outcomes, scored against subsequent observation; reliability weights later planning updates; no true transition function or corruption labels available to estimator",
+    "mask_design": "nested corruption masks predefined per maze and seed; labels used only by planning-model intervention",
+    "rng_design": "separate agent, training environment, evaluation environment, and greedy action streams"
+  },
+  "bias_levels": [
+    0.0,
+    0.1,
+    0.3
+  ],
+  "algorithms": [
+    "q_learning",
+    "dyna_q_fixed",
+    "dyna_q_adaptive",
+    "dyna_q_reliability",
+    "dyna_q_no_weight",
+    "dyna_q_shuffled_reliability",
+    "dyna_q_prioritized"
+  ],
+  "mazes": {
+    "large_12x12_short": {
+      "rows": [
+        "S..#..#..#..",
+        "..##........",
+        "....#...#.#.",
+        "..#..#....#.",
+        "............",
+        "..#...#.....",
+        "............",
+        "............",
+        ".#........#.",
+        "#...###.#...",
+        ".#..........",
+        "..#.......#G"
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        11,
+        11
+      ],
+      "shortest_path_length_moves": 22
+    },
+    "large_12x12_long": {
+      "rows": [
+        "S#...##....#",
+        ".#.......#..",
+        "...#...##...",
+        ".###...#....",
+        "..##.#..#...",
+        ".#..#.......",
+        "#..#........",
+        ".#...###.#..",
+        "..#.##.#.#..",
+        ".....##.##..",
+        "...#......##",
+        "...###..#..G"
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        11,
+        11
+      ],
+      "shortest_path_length_moves": 30
+    },
+    "large_16x16_medium": {
+      "rows": [
+        "S.......#...#.#.",
+        "..#...#.#...#..#",
+        "....#..#........",
+        "#....###.....#..",
+        "..#.#....#....#.",
+        "......#......#..",
+        ".....#..........",
+        ".....##.#.......",
+        "...#..........#G",
+        "..#...##......#.",
+        ".........#......",
+        "......##..#..#.#",
+        "..#..####.......",
+        "..#.......#..##.",
+        ".#....##........",
+        "#.#.......#.#..."
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        8,
+        15
+      ],
+      "shortest_path_length_moves": 25
+    },
+    "large_16x16_long": {
+      "rows": [
+        "S..#.....#.#.#.#",
+        "...#..#.#.......",
+        "..#........#.##.",
+        ".......##...#...",
+        "...#..#.#.##..##",
+        "..#.#.###.##....",
+        "#.....#####..#..",
+        "#...#####.#.#...",
+        ".....#.###.#....",
+        "#...#...#.......",
+        "..#..#.#.##...##",
+        "##..#.....#.....",
+        ".#...#.....#..##",
+        "#.######....#..#",
+        "...##....#...#..",
+        "...#.#...#.....G"
+      ],
+      "start": [
+        0,
+        0
+      ],
+      "goal": [
+        15,
+        15
+      ],
+      "shortest_path_length_moves": 40
+    }
+  },
+  "seed_values": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "planned_runs": 840,
+  "experiment_scope": "larger deterministic grids and prioritized-sweeping baseline; stochastic transitions are not included",
+  "interpretation_guardrails": [
+    "Corruption labels are hidden from reliability estimator.",
+    "Reliability predictions are generated from learned outcomes before current outcome is observed.",
+    "Unseen pairs have no reliability evidence; reliability weight defaults to zero.",
+    "All environments are fixed deterministic layouts; results do not establish stochastic robustness.",
+    "Prioritized sweeping uses the learned planning model and the same planning-only corruption intervention."
+  ]
+}
